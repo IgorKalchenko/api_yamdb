@@ -55,15 +55,11 @@ class Title(models.Model):
         blank=True,
         related_name='titles'
     )
-    genres = models.ManyToManyField(Genre, through='GengreTitle', through_fields=('title', 'genre'))
+    genres = models.ManyToManyField(Genre)
 
     class Meta:
         verbose_name = 'Намименование'
         verbose_name_plural = 'Наименования'
-
-class GenreTitle(models.Model):
-    title = models.ForeignKey(Title, on_delete=models.CASCADE)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
 
 
 class Review(models.Model):
