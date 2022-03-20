@@ -76,7 +76,7 @@ class Review(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='reviewers'
+        related_name='reviewer'
     )
     score = models.PositiveSmallIntegerField(
         validators=[
