@@ -61,12 +61,16 @@ class Title(models.Model):
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
 
+    def __str__(self):
+        return self.name
+
 
 class Review(models.Model):
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
-        related_name='titles'
+        related_name='reviews',
+        verbose_name='Произведение',
     )
     text = models.TextField()
     author = models.ForeignKey(
