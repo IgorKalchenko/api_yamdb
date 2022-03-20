@@ -1,7 +1,9 @@
 import datetime as dt
 
 from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    MaxValueValidator, MinValueValidator, MaxLengthValidator
+)
 from django.db import models
 
 User = get_user_model()
@@ -45,8 +47,14 @@ class Title(models.Model):
         max_length=256
     )
     year = models.PositiveIntegerField(
+        max_length=4,
         verbose_name='Год выпуска',
-        validators=[MaxValueValidator(dt.datetime.today().year)]
+        validators=[
+            MaxValueValidator(dt.datetime.today().year),
+        ],
+        error_messages={
+            'invalid_date': 'Значение даты введено неправильно'
+        }
     )
     category = models.ForeignKey(
         Category,

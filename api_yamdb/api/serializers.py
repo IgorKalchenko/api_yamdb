@@ -23,13 +23,14 @@ class TitleSerializer(serializers.ModelSerializer):
     )
     genre = GenreSerializer(
         read_only=True,
-        many=True
+        many=True,
+        source='genres'
     )
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year',
-                  'genre', 'category')
+        fields = ('id', 'name', 'year', 'genre',
+                  'category')
 
 
 class TitlePostSerializer(serializers.ModelSerializer):
@@ -74,5 +75,5 @@ class ReviewSerializer(serializers.Serializer):
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = '_all'
 #        read_only_fields = ('title', )
