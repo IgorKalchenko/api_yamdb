@@ -58,8 +58,8 @@ class Title(models.Model):
     genres = models.ManyToManyField(Genre)
 
     class Meta:
-        verbose_name = 'Намименование'
-        verbose_name_plural = 'Наименования'
+        verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
 
 
 class Review(models.Model):
