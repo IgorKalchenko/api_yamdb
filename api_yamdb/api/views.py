@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .pagination import ApiPagination
 from .permissions import AuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Avg
 
 # from .permissions import AuthorOrReadOnly
 
@@ -37,11 +38,11 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     serializer_class = TitleSerializer
     pagination_class = ApiPagination
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('name', 'genre__name', 'category__name', 'year')
+#    filterset_fields = ('name', 'genre__name', 'category__name', 'year')
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer

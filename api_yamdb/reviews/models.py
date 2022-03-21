@@ -47,10 +47,9 @@ class Title(models.Model):
         max_length=256
     )
     year = models.PositiveIntegerField(
-        max_length=4,
         verbose_name='Год выпуска',
         validators=[
-            MaxValueValidator(dt.datetime.today().year),
+            MaxValueValidator(dt.datetime.today().year)
         ],
         error_messages={
             'invalid_date': 'Значение даты введено неправильно'
