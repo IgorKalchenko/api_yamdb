@@ -83,7 +83,7 @@ class Review(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='reviewer'
+        related_name='reviews'
     )
     score = models.PositiveSmallIntegerField(
         validators=[
@@ -102,6 +102,12 @@ class Review(models.Model):
         ordering = ['-pub_date']
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='just_one_review_per_author'
+            )
+        ]
 
     def __str__(self):
         return self.text[:25]
@@ -129,9 +135,9 @@ class Comment(models.Model):
     )
 
     class Meta:
+        ordering = ['-pub_date']
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ['-pub_date']
 
     def __str__(self):
         return self.text[:25]

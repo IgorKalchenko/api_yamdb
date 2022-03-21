@@ -35,7 +35,7 @@ class TitleSerializer(serializers.ModelSerializer):
                   'category', 'rating')
 
 
-class TitlePostSerializer(serializers.ModelSerializer):
+class TitleWriteSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -60,22 +60,23 @@ class TitlePostSerializer(serializers.ModelSerializer):
         return value
 
 
-class CommentSerializer(serializers.Serializer):
+class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
+        read_only=True,
+        slug_field='username',
     )
 
     class Meta:
-        model = Comment
-        fields = '__all__'
-
-
-class ReviewSerializer(serializers.Serializer):
-    author = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
-    )
-
-    class Meta:
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
-        fields = '_all'
-#        read_only_fields = ('title', )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+
+    class Meta:
+        fields = ('id', 'text', 'author', 'pub_date')
+        model = Comment
