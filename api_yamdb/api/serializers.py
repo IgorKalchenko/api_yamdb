@@ -2,7 +2,6 @@ import datetime as dt
 
 from rest_framework import serializers
 from reviews.models import Category, Comment, Genre, Review, Title
-from django.db.models import Avg
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -35,7 +34,7 @@ class TitleSerializer(serializers.ModelSerializer):
                   'category', 'rating')
 
 
-class TitleWriteSerializer(serializers.ModelSerializer):
+class TitlePostSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
