@@ -19,6 +19,7 @@ class Category(models.Model):
         max_length=50)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
@@ -34,6 +35,7 @@ class Genre(models.Model):
     slug = models.SlugField(unique=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
 
@@ -54,6 +56,12 @@ class Title(models.Model):
         error_messages={
             'invalid_date': 'Значение даты введено неправильно'
         }
+    )
+    description = models.TextField(
+        max_length=256, 
+        verbose_name='Описание',
+        null=True,
+        blank=True
     )
     category = models.ForeignKey(
         Category,
@@ -87,7 +95,7 @@ class Review(models.Model):
     )
     score = models.PositiveSmallIntegerField(
         validators=[
-            MinValueValidator(0),
+            MinValueValidator(1),
             MaxValueValidator(10)
         ]
     )

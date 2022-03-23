@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework import viewsets
+from django.db.models import Avg
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin, UpdateModelMixin,
@@ -15,7 +16,7 @@ from .pagination import ApiPagination
 from .permissions import AuthorOrReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
-                          TitlePostSerializer, TitleSerializer)
+                          TitleCreateSerializer, TitleReadSerializer)
 
 # from .permissions import AuthorOrReadOnly
 
@@ -106,7 +107,9 @@ class TitleViewSet(ListModelMixin,
     Права доступа: **Администратор**
 
     """
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    )
     permission_classes = (AuthorOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     # filterset_fields = ('genre', 'category', 'year', 'name',)
@@ -114,9 +117,8 @@ class TitleViewSet(ListModelMixin,
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
-            return TitleSerializer
-
-        return TitlePostSerializer
+            return TitleReadSerializer
+        return TitleCreateSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -149,6 +151,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     """
     serializer_class = ReviewSerializer
+    permission_classes = (AuthorOrReadOnly,)
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')

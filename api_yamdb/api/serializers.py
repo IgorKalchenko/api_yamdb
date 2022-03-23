@@ -1,5 +1,6 @@
 import datetime as dt
 
+from rest_framework.validators import UniqueTogetherValidator
 from rest_framework import serializers
 from reviews.models import Category, Comment, Genre, Review, Title
 
@@ -16,7 +17,7 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ('name', 'slug')
 
 
-class TitleSerializer(serializers.ModelSerializer):
+class TitleReadSerializer(serializers.ModelSerializer):
     category = CategorySerializer(
         read_only=True,
         many=False
@@ -30,11 +31,13 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year', 'genre',
-                  'category', 'rating')
+        fields = (
+            'id', 'name', 'year', 'rating',
+            'description', 'genre', 'category'
+        )
 
 
-class TitlePostSerializer(serializers.ModelSerializer):
+class TitleCreateSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
         slug_field='slug'
@@ -49,7 +52,8 @@ class TitlePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = (
-            'id', 'name', 'year', 'genre', 'category'
+            'id', 'name', 'year',
+            'genre', 'category'
         )
 
     def validate_year(self, value):
@@ -64,10 +68,20 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         slug_field='username',
     )
-
+    title = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name',
+    )
     class Meta:
-        fields = ('id', 'text', 'author', 'score', 'pub_date')
+        fields = ('id', 'title', 'text', 'author', 'score', 'pub_date')
         model = Review
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=['title', 'author'],
+                message='Запрещено добавление более одного на произведение.'
+            )
+        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):
