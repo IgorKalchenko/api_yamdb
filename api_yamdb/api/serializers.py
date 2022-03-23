@@ -25,7 +25,6 @@ class TitleReadSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(
         read_only=True,
         many=True,
-        source='genres'
     )
     rating = serializers.IntegerField(read_only=True)
 
@@ -67,21 +66,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True,
         slug_field='username',
+        required=False
     )
-    title = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='name',
-    )
+
     class Meta:
-        fields = ('id', 'title', 'text', 'author', 'score', 'pub_date')
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
+        read_only_fields = ('title', 'author')
         model = Review
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Review.objects.all(),
-                fields=['title', 'author'],
-                message='Запрещено добавление более одного на произведение.'
-            )
-        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):

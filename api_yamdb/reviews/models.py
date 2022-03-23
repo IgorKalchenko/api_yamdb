@@ -1,9 +1,7 @@
 import datetime as dt
 
 from django.contrib.auth import get_user_model
-from django.core.validators import (
-    MaxValueValidator, MinValueValidator, MaxLengthValidator
-)
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -58,7 +56,7 @@ class Title(models.Model):
         }
     )
     description = models.TextField(
-        max_length=256, 
+        max_length=256,
         verbose_name='Описание',
         null=True,
         blank=True
@@ -70,7 +68,7 @@ class Title(models.Model):
         blank=True,
         related_name='titles'
     )
-    genres = models.ManyToManyField(Genre)
+    genre = models.ManyToManyField(Genre, blank=True, related_name='titles')
 
     class Meta:
         verbose_name = 'Произведение'
@@ -128,8 +126,7 @@ class Comment(models.Model):
         related_name='comments'
     )
     text = models.TextField(
-        null=True,
-        blank=True
+        max_length=256
     )
     author = models.ForeignKey(
         User,
