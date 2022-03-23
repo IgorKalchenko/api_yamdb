@@ -1,15 +1,14 @@
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
-from rest_framework import viewsets, exceptions
-from django.db.models import Avg
+from rest_framework import exceptions, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
-                                   ListModelMixin, UpdateModelMixin,
-                                   RetrieveModelMixin)
+                                   ListModelMixin, RetrieveModelMixin,
+                                   UpdateModelMixin)
 from rest_framework.pagination import (LimitOffsetPagination,
                                        PageNumberPagination)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from reviews.models import Category, Comment, Genre, Review, Title
 
 from .pagination import ApiPagination
