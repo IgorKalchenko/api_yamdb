@@ -2,7 +2,6 @@ import datetime as dt
 
 from django.db import models
 from rest_framework import serializers
-
 from reviews.models import Category, Genre, Title
 
 
@@ -35,25 +34,25 @@ class TitleSerializer(serializers.ModelSerializer):
                   'genre', 'category')
 
 
-# class TitlePostSerializer(serializers.ModelSerializer):
-#     category = serializers.SlugRelatedField(
-#         queryset=Category.objects.all(),
-#         slug_field='slug'
-#     )
+class TitlePostSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field='slug'
+    )
 
-#     genre = serializers.SlugRelatedField(
-#         queryset=Genre.objects.all(),
-#         slug_field='slug',
-#         many=True
-#     )
+    genre = serializers.SlugRelatedField(
+        queryset=Genre.objects.all(),
+        slug_field='slug',
+        many=True
+    )
 
-#     class Meta:
-#         model = Title
-#         fields = ('id', 'name', 'year',
-#                   'genre', 'category')
+    class Meta:
+        model = Title
+        fields = ('id', 'name', 'year',
+                  'genre', 'category')
 
-#     def validate_year(self, value):
-#         year = dt.datetime.today().year
-#         if value > year:
-#             raise serializers.ValidationError('Не правильно указан год')
-#         return value
+    def validate_year(self, value):
+        year = dt.datetime.today().year
+        if value > year:
+            raise serializers.ValidationError('Проверьте год')
+        return value
