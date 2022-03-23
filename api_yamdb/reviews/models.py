@@ -19,7 +19,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-    
+
     def __str__(self):
         return self.name
 
@@ -34,7 +34,7 @@ class Genre(models.Model):
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
-    
+
     def __str__(self):
         return self.name
 
@@ -55,7 +55,7 @@ class Title(models.Model):
         null=True,
         blank=True,
         related_name='titles'
-        )
+    )
     genre = models.ManyToManyField(Genre, through='Genre_Title')
 
     class Meta:
@@ -108,7 +108,7 @@ class Genre_Title(models.Model):
 
 # class Commentary(models.Model):
 #     review = models.ForeignKey(
-#         Review, 
+#         Review,
 #         on_delete=models.CASCADE,
 #     )
 #     text = models.TextField(
