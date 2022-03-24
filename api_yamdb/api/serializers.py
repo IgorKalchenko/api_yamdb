@@ -1,6 +1,5 @@
 import datetime as dt
 
-from django.db import models
 from rest_framework import serializers
 from reviews.models import Category, Genre, Title
 
@@ -29,7 +28,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year',
+        fields = ('id', 'name', 'year', 'description',
                   'genre', 'category')
 
 
@@ -47,7 +46,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year',
+        fields = ('id', 'name', 'year', 'description',
                   'genre', 'category')
 
     def validate_year(self, value):

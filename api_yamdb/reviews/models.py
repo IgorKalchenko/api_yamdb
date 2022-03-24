@@ -1,7 +1,7 @@
 import datetime as dt
 
 from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -49,6 +49,10 @@ class Title(models.Model):
         verbose_name='Год выпуска',
         validators=[MaxValueValidator(dt.datetime.today().year)]
     )
+    description = models.CharField(
+        verbose_name='Описание',
+        max_length=256
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -79,51 +83,3 @@ class Genre_Title(models.Model):
 
     def __str__(self):
         return f'{self.title} {self.genre}'
-
-# class Review(models.Model):
-#     title = models.ForeignKey(
-#         Title,
-#         on_delete=models.CASCADE
-#     )
-#     text = models.TextField()
-#     author = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE
-#     )
-#     score = models.PositiveSmallIntegerField(
-#         validators=[MinValueValidator(0),
-#                     MaxValueValidator(10)]
-#     )
-#     pub_date = models.DateTimeField(
-#         verbose_name='Дата публикации',
-#         auto_now_add=True,
-#         db_index=True
-#     )
-
-#     class Meta:
-#         ordering = ['-pub_date']
-#         verbose_name = 'Отзыв'
-#         verbose_name_plural = 'Отзывы'
-
-
-# class Commentary(models.Model):
-#     review = models.ForeignKey(
-#         Review,
-#         on_delete=models.CASCADE,
-#     )
-#     text = models.TextField(
-#         null=True,
-#         blank=True
-#     )
-#     author = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE)
-#     pub_date = models.DateTimeField(
-#         verbose_name='Дата публикации',
-#         auto_now_add=True,
-#         db_index=True
-#     )
-
-#     class Meta:
-#         verbose_name = 'Комментарий'
-#         verbose_name_plural = 'Комментарии'
