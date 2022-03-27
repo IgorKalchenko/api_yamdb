@@ -39,13 +39,33 @@ class AdminUserSerializer(MeSerializer):
 
 
 class ConfirmationCodeSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True, max_length=150)
-    email = serializers.EmailField(required=True, max_length=254)
-    confirmation_code = serializers.CharField(max_length=150)
+    username = serializers.CharField(
+        required=True,
+        max_length=150,
+        validators=[UniqueValidator(
+            queryset=User.objects.all(),
+            message='Поле "username" должно быть уникальным'
+        )]
+    )
+    email = serializers.EmailField(
+        required=True,
+        max_length=254,
+        validators=[UniqueValidator(
+            queryset=User.objects.all(),
+            message='Поле "email" должно быть уникальным'
+        )]
+    )
+    confirmation_code = serializers.CharField(required=False, max_length=150)
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError(
+                'Поле "username" не может иметь значение "me".'
+            )
+        return value
 
 
 class JWTTokenSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, max_length=150)
     confirmation_code = serializers.CharField(max_length=150)
-    token = serializers.CharField(max_length=250)
+    
 

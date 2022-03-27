@@ -3,9 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 CHOICES = (
-        ('user', 'Аутентифицированный пользователь'),
-        ('moderator', 'Модератор'),
-        ('admin', 'Администратор'),
+        ('USER', 'Аутентифицированный пользователь'),
+        ('MODERATOR', 'Модератор'),
+        ('ADMIN', 'Администратор'),
     )
 
 
@@ -21,10 +21,19 @@ class User(AbstractUser):
         _('role'),
         max_length=50,
         choices=CHOICES,
-        default=('user', 'Аутентифицированный пользователь')
+        default='USER'
     )
-    # confirmation_code = models.CharField(
-    #     _('confirmation_code'),
-    #     max_length=80,
-    # )
-    # REQUIRED_FIELDS = ['email', 'username']
+    @property
+    def is_admin(self):
+        return self.role == 'ADMIN' or self.is_staff
+
+    @property
+    def is_moderator(self):
+        return self.role == 'MODERATOR'
+
+
+
+# class Role(models.TextChoices):
+#     USER = 'user',
+#     MODERATOR = 'moderator'
+#     ADMIN = 'admin'
