@@ -67,18 +67,19 @@ class AdminUserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
 
     @action(
-        methods=['get', 'patch'],
-        detail=True,
+        methods=['GET', 'PATCH'],
+        detail=False,
         url_path='me',
         url_name='me',
         permission_classes = (IsMe,)
     )
     def me(self, request):
-        user = self.request.user
-        serializer = MeSerializer(user, data=request.data, partial=True)
+        user = get_object_or_404(User, username=request.user.username)
         if request.method == 'PATCH':
-            if serializer.is_valid:
+            serializer = MeSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = MeSerializer(user, partial=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

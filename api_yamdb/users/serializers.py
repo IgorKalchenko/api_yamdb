@@ -5,7 +5,15 @@ from .models import User
 
 
 class MeSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(read_only=True)
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    CHOICES = [
+        (USER, 'Аутентифицированный пользователь'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Администратор'),
+    ]
+    role = serializers.ChoiceField(read_only=True, choices=CHOICES, default=USER)
     username = serializers.CharField(
         required=True,
         max_length=150,
@@ -35,7 +43,15 @@ class MeSerializer(serializers.ModelSerializer):
 
 
 class AdminUserSerializer(MeSerializer):
-    role = serializers.CharField(read_only=False)
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    CHOICES = [
+        (USER, 'Аутентифицированный пользователь'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Администратор'),
+    ]
+    role = serializers.ChoiceField(read_only=False, choices=CHOICES, default=USER)
 
 
 class ConfirmationCodeSerializer(serializers.Serializer):
