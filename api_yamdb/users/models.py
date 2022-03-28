@@ -26,6 +26,7 @@ class User(AbstractUser):
         choices=CHOICES,
         default=USER
     )
+
     @property
     def is_admin(self):
         return self.role == self.ADMIN or self.is_staff
@@ -33,10 +34,3 @@ class User(AbstractUser):
     @property
     def is_moderator(self):
         return self.role == self.MODERATOR
-
-
-
-# class Role(models.TextChoices):
-#     USER = 'user',
-#     MODERATOR = 'moderator'
-#     ADMIN = 'admin'

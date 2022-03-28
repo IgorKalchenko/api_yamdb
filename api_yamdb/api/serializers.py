@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import User
+from reviews.models import Category, Comment, Genre, Review, Title
+from users.models import User
 
 
 class MeSerializer(serializers.ModelSerializer):
@@ -13,7 +14,9 @@ class MeSerializer(serializers.ModelSerializer):
         (MODERATOR, 'Модератор'),
         (ADMIN, 'Администратор'),
     ]
-    role = serializers.ChoiceField(read_only=True, choices=CHOICES, default=USER)
+    role = serializers.ChoiceField(
+        read_only=True, choices=CHOICES, default=USER
+    )
     username = serializers.CharField(
         required=True,
         max_length=150,
@@ -22,7 +25,7 @@ class MeSerializer(serializers.ModelSerializer):
             message='Поле "username" должно быть уникальным'
         )]
     )
-    email=serializers.EmailField(
+    email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(
             queryset=User.objects.all(),
@@ -31,7 +34,11 @@ class MeSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
+        fields = (
+            'username', 'email',
+            'first_name', 'last_name',
+            'bio', 'role'
+        )
         model = User
 
     def validate_username(self, value):
@@ -51,7 +58,9 @@ class AdminUserSerializer(MeSerializer):
         (MODERATOR, 'Модератор'),
         (ADMIN, 'Администратор'),
     ]
-    role = serializers.ChoiceField(read_only=False, choices=CHOICES, default=USER)
+    role = serializers.ChoiceField(
+        read_only=False, choices=CHOICES, default=USER
+    )
 
 
 class ConfirmationCodeSerializer(serializers.Serializer):
@@ -72,6 +81,7 @@ class ConfirmationCodeSerializer(serializers.Serializer):
         )]
     )
     confirmation_code = serializers.CharField(required=False, max_length=150)
+
     def validate_username(self, value):
         if value == 'me':
             raise serializers.ValidationError(
@@ -83,5 +93,65 @@ class ConfirmationCodeSerializer(serializers.Serializer):
 class JWTTokenSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, max_length=150)
     confirmation_code = serializers.CharField(max_length=150)
-    
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('name', 'slug')
+        lookup_field = 'slug'
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ('name', 'slug')
+        lookup_field = 'slug'
+
+
+class TitleViewSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
+    rating = serializers.FloatField()
+
+    class Meta():
+        fields = '__all__'
+        model = Title
+
+
+class TitlePostSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        queryset=Genre.objects.all(),
+        slug_field='slug',
+        many=True
+    )
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field='slug',
+    )
+
+    class Meta:
+        fields = '__all__'
+        model = Title
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True
+    )
+
+    class Meta:
+        exclude = ('title',)
+        model = Review
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True
+    )
+
+    class Meta:
+        exclude = ('review',)
+        model = Comment
