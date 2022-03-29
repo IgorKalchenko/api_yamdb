@@ -114,9 +114,10 @@ class TitleViewSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     rating = serializers.FloatField()
 
-    class Meta():
-        fields = '__all__'
+    class Meta:
         model = Title
+        fields = ('id', 'name', 'year', 'description',
+                  'genre', 'category')
 
 
 class TitlePostSerializer(serializers.ModelSerializer):

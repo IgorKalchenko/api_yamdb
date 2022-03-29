@@ -105,25 +105,20 @@ class CreateListViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
-    pass
-
-
-class CategoryViewSet(CreateListViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
     permission_classes = [IsReadOnly | IsAdminRole]
     filter_backends = [SearchFilter]
     search_fields = ['name']
     lookup_field = 'slug'
 
 
+class CategoryViewSet(CreateListViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
 class GenreViewSet(CreateListViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsReadOnly | IsAdminRole]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
-    lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
