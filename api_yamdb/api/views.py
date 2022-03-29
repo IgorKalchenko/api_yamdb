@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import exceptions, filters, mixins, status, viewsets
+from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
@@ -144,12 +144,7 @@ class ReviewView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        author = self.request.user
-        if Review.objects.filter(title=title, author=author).exists():
-            raise exceptions.ValidationError(
-                'Запрещено добавление более одного отзыава на произведение.'
-            )
-        serializer.save(author=author, title=title)
+        serializer.save(author=self.request.user, title=title)
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))

@@ -145,6 +145,16 @@ class ReviewSerializer(serializers.ModelSerializer):
         exclude = ('title',)
         model = Review
 
+    def validate(self, data):
+        is_exist = Review.objects.filter(
+            author=self.context['request'].user,
+            title=self.context['view'].kwargs.get('title_id')).exists()
+        if is_exist and self.context['request'].method == 'POST':
+            raise serializers.ValidationError(
+                'Запрещено добавление более одного отзыва на произведение.'
+            )
+        return data
+
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
