@@ -62,6 +62,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+Для загрузки тестовой базы данных выполните команду:
+
+```
+python manage.py import_data
+```
+
 ## Участники
 [Игорь Кальченко](https://github.com/IgorKalchenko) - управление пользователями (Auth и Users): система регистрации и аутентификации, права доступа, работа с токеном, система подтверждения e-mail, поля.
 

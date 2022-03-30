@@ -94,7 +94,7 @@ class TitleViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = ('id', 'name', 'year', 'description',
-                  'genre', 'category')
+                  'genre', 'category', 'rating')
 
 
 class TitlePostSerializer(serializers.ModelSerializer):
