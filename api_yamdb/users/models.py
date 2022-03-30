@@ -13,8 +13,13 @@ class User(AbstractUser):
         (ADMIN, 'Администратор'),
     ]
     email = models.EmailField(
-        _('email address'), unique=True, blank=False, null=False
+        _('email address'),
+        unique=True,
+        blank=False,
+        null=False,
+        max_length=254
     )
+    first_name = models.CharField(_('first name'), max_length=150, blank=True)
     bio = models.TextField(
         _('biography'),
         blank=True,
@@ -22,7 +27,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         _('role'),
-        max_length=50,
+        max_length=40,
         choices=CHOICES,
         default=USER
     )

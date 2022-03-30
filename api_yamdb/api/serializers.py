@@ -6,17 +6,7 @@ from users.models import User
 
 
 class MeSerializer(serializers.ModelSerializer):
-    USER = 'user'
-    MODERATOR = 'moderator'
-    ADMIN = 'admin'
-    CHOICES = [
-        (USER, 'Аутентифицированный пользователь'),
-        (MODERATOR, 'Модератор'),
-        (ADMIN, 'Администратор'),
-    ]
-    role = serializers.ChoiceField(
-        read_only=True, choices=CHOICES, default=USER
-    )
+    role = serializers.CharField(read_only=True)
     username = serializers.CharField(
         required=True,
         max_length=150,
@@ -50,35 +40,22 @@ class MeSerializer(serializers.ModelSerializer):
 
 
 class AdminUserSerializer(MeSerializer):
-    USER = 'user'
-    MODERATOR = 'moderator'
-    ADMIN = 'admin'
-    CHOICES = [
-        (USER, 'Аутентифицированный пользователь'),
-        (MODERATOR, 'Модератор'),
-        (ADMIN, 'Администратор'),
-    ]
+    CHOICES = User.CHOICES
     role = serializers.ChoiceField(
-        read_only=False, choices=CHOICES, default=USER
+        read_only=False,
+        choices=CHOICES,
+        default=User.USER
     )
 
 
 class ConfirmationCodeSerializer(serializers.Serializer):
     username = serializers.CharField(
         required=True,
-        max_length=150,
-        validators=[UniqueValidator(
-            queryset=User.objects.all(),
-            message='Поле "username" должно быть уникальным'
-        )]
+        max_length=150
     )
     email = serializers.EmailField(
         required=True,
-        max_length=254,
-        validators=[UniqueValidator(
-            queryset=User.objects.all(),
-            message='Поле "email" должно быть уникальным'
-        )]
+        max_length=254
     )
     confirmation_code = serializers.CharField(required=False, max_length=150)
 
