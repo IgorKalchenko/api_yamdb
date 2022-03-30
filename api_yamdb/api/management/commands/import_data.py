@@ -31,7 +31,7 @@ class Command(BaseCommand):
             return 'Операция пропущена.'
         elif answer != 'y' or answer != 'n':
             return 'Введено некорректное значение.'
-        
+
         for model, csv_file in Models.items():
             with open(
                 os.path.join(settings.STATICFILES_DIRS[0], 'data', csv_file),
