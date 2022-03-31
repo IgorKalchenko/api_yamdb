@@ -49,12 +49,12 @@ def send_confirmation_code(request):
             username=username,
             email=email
         )
-        send_code(user)
-        if created:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        send_code(user)
+    if created:
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
