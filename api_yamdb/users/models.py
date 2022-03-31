@@ -16,7 +16,6 @@ class User(AbstractUser):
         _('email address'),
         unique=True,
         blank=False,
-        null=False,
         max_length=254
     )
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
@@ -27,7 +26,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         _('role'),
-        max_length=40,
+        max_length=max(len(choice) for choice, _ in CHOICES),
         choices=CHOICES,
         default=USER
     )
