@@ -27,10 +27,12 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(
-        max_length=50,
+        max_length=256,
         verbose_name='Жанр'
     )
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(
+        unique=True,
+        max_length=50)
 
     class Meta:
         ordering = ['name']
